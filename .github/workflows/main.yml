@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd app
-          npm install --force
+          npm install --legacy-peer-deps
           
       - name: Build and Export Next.js
         run: |
