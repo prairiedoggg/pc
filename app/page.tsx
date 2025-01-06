@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { useMutation } from 'react-query';
+import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import apiClient from '../utils/apiClient';
 import styled from 'styled-components';
@@ -47,29 +47,27 @@ export default function Home() {
   }, [watchFile]);
 
   // react-query mutation
-  const mutation = useMutation<PredictionResult, Error, FormData>(async (formData) => {
-    const res = await apiClient.post('/api/predict', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return res.data;
+  const {
+    mutate,
+    data,
+    error,
+    isPending,
+    isSuccess,
+    isError
+  } = useMutation({
+    mutationFn: async (formData: FormData): Promise<PredictionResult> => {
+      const res = await apiClient.post('/api/predict', formData);
+      return res.data;
+    },
   });
 
-  // 파 제출 시 예측 호출
+  // 파일 제출 시 예측 호출
   const onSubmit = (data: FormInputs) => {
-    console.log('onSubmit called - form 데이터:', data);
-
-    // 혹시 file이 존재하는지 검사
-    if (!data.file || data.file.length === 0) {
-      return;
-    }
-
+    if (!data.file || data.file.length === 0) return;
+    
     const formData = new FormData();
     formData.append('file', data.file[0]);
-
-    // API 호출
-    mutation.mutate(formData);
+    mutate(formData);
   };
 
   return (
@@ -123,26 +121,26 @@ export default function Home() {
           )}
 
           {/* 로딩 표시 */}
-          {mutation.isLoading && (
+          {isPending && (
             <LoadingText>예측 중... 잠시만 기다려주세요.</LoadingText>
           )}
 
           {/* 에러 표시 */}
-          {mutation.isError && (
+          {isError && (
             <ErrorText>
               오류가 발생했습니다:{' '}
-              {(mutation.error as PredictionError).response?.data?.detail ||
-                (mutation.error as PredictionError).message}
+              {(error as PredictionError).response?.data?.detail ||
+                (error as PredictionError).message}
             </ErrorText>
           )}
 
           {/* 예측 결과 */}
-          {mutation.isSuccess && (
+          {isSuccess && (
             <ResultContainer>
               <ResultTitle>예측 결과</ResultTitle>
               <ResultList>
-                {mutation.data.personality.map((personality: string, index: number) => {
-                  const confidenceValue = (mutation.data.confidence[index] * 100).toFixed(2);
+                {data.personality.map((personality: string, index: number) => {
+                  const confidenceValue = (data.confidence[index] * 100).toFixed(2);
                   return (
                     <ResultItem key={index}>
                       <TextGroup>
