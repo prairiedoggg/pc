@@ -19,7 +19,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd my-pet-personality-app
+          cd ../../my-pet-personality-app
           npm install
 
       - name: Build and Export Next.js
