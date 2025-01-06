@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { useMutation, UseMutationResult } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import apiClient from '../utils/apiClient';
 import styled from 'styled-components';
