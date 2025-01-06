@@ -11,6 +11,20 @@ interface FormInputs {
   file: FileList;
 }
 
+interface PredictionResult {
+  personality: string[];
+  confidence: number[];
+}
+
+interface PredictionError {
+  response?: {
+    data?: {
+      detail?: string;
+    };
+  };
+  message?: string;
+}
+
 export default function Home() {
   // 미리보기 URL
   const [preview, setPreview] = useState<string | null>(null);
@@ -33,7 +47,7 @@ export default function Home() {
   }, [watchFile]);
 
   // react-query mutation
-  const mutation = useMutation<any, Error, FormData>(async (formData) => {
+  const mutation = useMutation<PredictionResult, Error, FormData>(async (formData) => {
     const res = await apiClient.post('/api/predict', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -68,8 +82,8 @@ export default function Home() {
 
       <MainContainer>
         <CardContainer>
-          <Title>반려동물 성격 예측 서비스</Title>
-          <Description>이미지 업로드와 머신러닝을 통해 반려동물의 성격을 예측해보세요!</Description>
+          <Title>우리 강아지는 어떤 성격일까?!</Title>
+          <Description>이미지를 업로드해 반려동물의 성격을 예측해보세요!</Description>
 
           {/* 파일 업로드 폼 */}
           <FormGroup onSubmit={handleSubmit(onSubmit)}>
@@ -117,8 +131,8 @@ export default function Home() {
           {mutation.isError && (
             <ErrorText>
               오류가 발생했습니다:{' '}
-              {(mutation.error as any).response?.data?.detail ||
-                (mutation.error as any).message}
+              {(mutation.error as PredictionError).response?.data?.detail ||
+                (mutation.error as PredictionError).message}
             </ErrorText>
           )}
 
