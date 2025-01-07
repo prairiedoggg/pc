@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd app
-          npm install --legacy-peer-deps
+          npm install
           
       - name: Build and Export Next.js
         run: |
@@ -29,8 +29,6 @@ jobs:
       
       - name: Build Check
         run: |
-          ls -la ./app/out
-          ls -la ./out
           ls -la
 
       - name: Configure AWS Credentials
@@ -42,7 +40,7 @@ jobs:
 
       - name: Sync to S3
         run: |
-          aws s3 sync my-pet-personality-app/out/ s3://${{ secrets.S3_BUCKET }} --delete
+          aws s3 sync my-pet-personality-app/ s3://${{ secrets.S3_BUCKET }} --delete
 
       - name: Invalidate CloudFront Cache
         run: |
