@@ -26,6 +26,12 @@ jobs:
         run: |
           cd app
           npm run build
+      
+      - name: Build Check
+        run: |
+          ls -la ./app/out
+          ls -la ./out
+          ls -la
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
