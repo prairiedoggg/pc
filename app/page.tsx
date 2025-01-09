@@ -76,6 +76,19 @@ export default function Home() {
         <title>반려동물 성격 예측 서비스</title>
         <meta name="description" content="이미지를 업로드하여 반려동물의 성격을 예측하세요." />
         <meta name="keywords" content="반려동물, 성격 예측, 이미지 분석, 머신러닝" />
+        
+        {/* AdSense 메타 태그 */}
+        <meta 
+          name="google-adsense-account" 
+          content={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID} 
+        />
+        
+        {/* AdSense 스크립트 */}
+        <script 
+          async 
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID}`}
+          crossOrigin="anonymous"
+        />
       </Head>
 
       <MainContainer>
