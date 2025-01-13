@@ -169,6 +169,24 @@ export default function Home() {
               </ResultList>
             </ResultContainer>
           )}
+
+          {/* 쿠팡 광고 */}
+          <script src="https://ads-partners.coupang.com/g.js"></script>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                new PartnersCoupang.G({
+                  "id":831036,
+                  "template":"banner",
+                  "trackingCode":"AF2923947",
+                  "width":"728",
+                  "height":"90"
+                });
+              `
+            }}
+          />
+          <p>"이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다."
+          </p>
         </CardContainer>
       </MainContainer>
     </>
