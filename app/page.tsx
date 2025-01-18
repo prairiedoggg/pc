@@ -94,11 +94,8 @@ export default function Home() {
         />
         
         {/* AdSense 스크립트 */}
-        <script 
-          async 
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID}`}
-          crossOrigin="anonymous"
-        />
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2568866467581564"
+     crossOrigin="anonymous"></script>
       </Head>
 
       <MainContainer>
