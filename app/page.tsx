@@ -90,7 +90,7 @@ export default function Home() {
         {/* AdSense 메타 태그 */}
         <meta 
           name="google-adsense-account" 
-          content={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID} 
+          content="ca-pub-2568866467581564"
         />
         
         {/* AdSense 스크립트 */}
