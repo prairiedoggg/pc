@@ -26,6 +26,15 @@ interface PredictionError {
   message?: string;
 }
 
+function Footer() {
+  return (
+    <FooterContainer>
+      <p>© 2025 MyPetPrediction. All rights reserved.</p>
+      <p>문의: contact@mypetprediction.com</p>
+    </FooterContainer>
+  );
+}
+
 export default function Home() {
   // 미리보기 URL
   const [preview, setPreview] = useState<string | null>(null);
@@ -188,6 +197,7 @@ export default function Home() {
           <p>"이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다."
           </p>
         </CardContainer>
+        <Footer />
       </MainContainer>
     </>
   );
@@ -357,5 +367,13 @@ const ProgressBarFill = styled.div<{ progress: number }>`
   transition: width 0.35s ease;
 `;
 
+const FooterContainer = styled.footer`
+  margin-top: 2rem;
+  padding: 1rem 0;
+  text-align: center;
+  font-size: 0.875rem;  /* 글씨 크기는 편의에 맞게 조절하세요 */
+  color: #4c51bf;       /* 인디고-700 근접 */
+  background-color: #edf2f7; /* gray-100 근접 */
+`;
 
 //useEffect 바꾼 후 성정 테스트
