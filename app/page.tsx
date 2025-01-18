@@ -6,7 +6,6 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import apiClient from '../utils/apiClient';
 import styled from 'styled-components';
-import Script from 'next/script';
 
 interface FormInputs {
   file: FileList;
