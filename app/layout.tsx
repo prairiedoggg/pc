@@ -16,6 +16,9 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "반려동물 성격 예측 서비스",
   description: "우리 집 강아지, 고양이는 어떤 성격처럼 생겼을까?",
+  icons: {
+    icon: "/puppy.png",
+  },
 };
 
 export default function RootLayout({
