@@ -182,7 +182,7 @@ export default function Home() {
           )}
 
           {/* 쿠팡 광고 */}
-          <Script src="https://ads-partners.coupang.com/g.js" />
+          {/* <Script src="https://ads-partners.coupang.com/g.js" />
           <Script id="coupang-banner">
             {`
               new PartnersCoupang.G({
@@ -193,7 +193,7 @@ export default function Home() {
                 "height":"90"
               });
             `}
-          </Script>
+          </Script> */}
         </CardContainer>
         <Footer />
       </MainContainer>
@@ -371,7 +371,6 @@ const FooterContainer = styled.footer`
   text-align: center;
   font-size: 0.875rem;  /* 글씨 크기는 편의에 맞게 조절하세요 */
   color: #4c51bf;       /* 인디고-700 근접 */
-  background-color: #edf2f7; /* gray-100 근접 */
 `;
 
 //useEffect 바꾼 후 성정 테스트
