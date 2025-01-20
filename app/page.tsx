@@ -79,7 +79,8 @@ export default function Home() {
     mutate(formData);
   };
 
-  // 예측 결과 확인
+  // 예측 결과 확인 ㅋ 
+
   return (
     <>
       <Head>
