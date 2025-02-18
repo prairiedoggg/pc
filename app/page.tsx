@@ -89,10 +89,7 @@ export default function Home() {
         <meta name="keywords" content="반려동물, 성격 예측, 이미지 분석, 머신러닝" />
         
         {/* AdSense 메타 태그 */}
-        <meta 
-          name="google-adsense-account" 
-          content="ca-pub-2568866467581564"
-        />
+        <meta name="google-adsense-account" content="ca-pub-2568866467581564" />
         
         {/* AdSense 스크립트 */}
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2568866467581564"
