@@ -89,17 +89,17 @@ export default function Home() {
         <meta name="description" content="이미지를 업로드하여 반려동물의 성격을 예측하세요." />
         <meta name="keywords" content="반려동물, 성격 예측, 이미지 분석, 머신러닝" />
         
-        {/* AdSense 메타 태그 */}
-        <meta name="google-adsense-account" content="ca-pub-2568866467581564" />
+        {/* AdSense 메타 태그
+        <meta name="google-adsense-account" content="ca-pub-2568866467581564" /> */}
       </Head>
       
-      {/* AdSense 스크립트 - next/script 사용 */}
+      {/* AdSense 스크립트 - next/script 사용
       <Script
         async
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2568866467581564"
         strategy="afterInteractive"
         crossOrigin="anonymous"
-      />
+      /> */}
 
       <MainContainer>
         <CardContainer>
