@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { Metadata } from 'next'
 import localFont from "next/font/local";
 import "./globals.css";
 import Providers from "./providers";
@@ -14,8 +14,12 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "반려동물 성격 예측 서비스",
-  description: "우리 집 강아지, 고양이는 어떤 성격처럼 생겼을까?",
+  title: '반려동물 성격 예측 서비스',
+  description: '이미지를 업로드하여 반려동물의 성격을 예측하세요.',
+  keywords: '반려동물, 성격 예측, 이미지 분석, 머신러닝',
+  other: {
+    'google-adsense-account': 'ca-pub-2568866467581564',
+  },
   icons: {
     icon: "/puppy.png",
   },
@@ -23,16 +27,23 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en">
+    <html lang="ko">
+      <head>
+        <script
+          async
+          src="https://pagead.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2568866467581564"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Providers>
           {children}
         </Providers>
       </body>
     </html>
-  );
+  )
 }
