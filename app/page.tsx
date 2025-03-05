@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import apiClient from '../utils/apiClient';
 import styled from 'styled-components';
+import { FaTwitter, FaInstagram } from 'react-icons/fa';
 
 interface FormInputs {
   file: FileList;
@@ -37,6 +38,10 @@ function Footer() {
 export default function Home() {
   // 미리보기 URL
   const [preview, setPreview] = useState<string | null>(null);
+  // 공유 URL
+  const [shareUrl, setShareUrl] = useState<string>("");
+  // 결과 캡처를 위한 ref
+  const resultRef = useRef<HTMLDivElement>(null);
 
   // react-hook-form 사용
   // - watch('file')를 통해 파일 선택 변화를 감지
@@ -44,6 +49,13 @@ export default function Home() {
 
   // watch로 file 변화를 감지
   const watchFile = watch('file');
+
+  // 현재 URL 설정
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setShareUrl(window.location.href);
+    }
+  }, []);
 
   // 파일이 바뀔 때마다 preview 갱신
   useEffect(() => {
@@ -79,7 +91,26 @@ export default function Home() {
     mutate(formData);
   };
 
-  // 예측 결과 확인 ㅋ 
+  // 트위터로 결과 공유하기
+  const shareToTwitter = () => {
+    // 트위터 공유 내용
+    const text = `제 반려동물의 성격은 ${data?.personality.join(', ')} 입니다! 여러분의 반려동물 성격도 확인해보세요.`;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`;
+    window.open(twitterUrl, '_blank');
+  };
+
+  // 인스타그램 스토리 공유 (제한적인 기능)
+  const shareToInstagram = () => {
+    // 인스타그램은 직접적인 공유 API가 제한적이라 모바일 앱으로 이동
+    alert('인스타그램 공유를 위해 결과 화면을 캡처한 후 인스타그램에 업로드해주세요!');
+    
+    // 모바일에서 인스타그램 앱 열기
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      window.location.href = 'instagram://';
+    } else {
+      window.open('https://instagram.com', '_blank');
+    }
+  };
 
   return (
     <>
@@ -158,7 +189,7 @@ export default function Home() {
 
           {/* 예측 결과 */}
           {isSuccess && (
-            <ResultContainer>
+            <ResultContainer ref={resultRef}>
               <ResultTitle>예측 결과</ResultTitle>
               <ResultList>
                 {data.personality.map((personality: string, index: number) => {
@@ -176,6 +207,21 @@ export default function Home() {
                   );
                 })}
               </ResultList>
+              
+              {/* 소셜 미디어 공유 버튼 */}
+              <ShareContainer>
+                <ShareTitle>결과 공유하기</ShareTitle>
+                <ShareButtonsContainer>
+                  <TwitterShareButton onClick={shareToTwitter}>
+                    <FaTwitter size={18} />
+                    트위터에 공유
+                  </TwitterShareButton>
+                  <InstagramShareButton onClick={shareToInstagram}>
+                    <FaInstagram size={18} />
+                    인스타그램에 공유
+                  </InstagramShareButton>
+                </ShareButtonsContainer>
+              </ShareContainer>
             </ResultContainer>
           )}
 
@@ -371,4 +417,53 @@ const FooterContainer = styled.footer`
   color: #4c51bf;       /* 인디고-700 근접 */
 `;
 
-//useEffect 바꾼 후 성정 테스트
+// 공유 관련 스타일 컴포넌트
+const ShareContainer = styled.div`
+  margin-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 1rem;
+`;
+
+const ShareTitle = styled.h3`
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #4c51bf;
+  margin-bottom: 0.75rem;
+  text-align: center;
+`;
+
+const ShareButtonsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+`;
+
+const ShareButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+`;
+
+const TwitterShareButton = styled(ShareButton)`
+  background-color: #1DA1F2;
+  color: white;
+  
+  &:hover {
+    background-color: #0c85d0;
+  }
+`;
+
+const InstagramShareButton = styled(ShareButton)`
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: white;
+  
+  &:hover {
+    opacity: 0.9;
+  }
+`;
