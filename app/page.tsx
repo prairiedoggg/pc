@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import Script from 'next/script';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import apiClient from '../utils/apiClient';
