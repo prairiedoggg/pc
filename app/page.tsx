@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
+import Script from 'next/script';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import apiClient from '../utils/apiClient';
@@ -90,11 +91,15 @@ export default function Home() {
         
         {/* AdSense 메타 태그 */}
         <meta name="google-adsense-account" content="ca-pub-2568866467581564" />
-        
-        {/* AdSense 스크립트 */}
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2568866467581564"
-     crossOrigin="anonymous"></script>
       </Head>
+      
+      {/* AdSense 스크립트 - next/script 사용 */}
+      <Script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2568866467581564"
+        strategy="afterInteractive"
+        crossOrigin="anonymous"
+      />
 
       <MainContainer>
         <CardContainer>
