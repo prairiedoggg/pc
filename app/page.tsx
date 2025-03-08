@@ -214,7 +214,10 @@ const MainContainer = styled.div`
   min-height: 100vh;
   background: linear-gradient(to bottom right, #ebf4ff, #c3dafe);
   padding: 1rem;
-  /* 다른 레이아웃이 필요하면 flex로 수정하세요 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 const CardContainer = styled.div`
