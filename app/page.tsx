@@ -135,7 +135,7 @@ export default function Home() {
       {/* 쿠팡 파트너스 스크립트 (onLoad 시점에 직접 배너 초기화) */}
       <Script
         src="https://ads-partners.coupang.com/g.js"
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
         onLoad={() => {
           try {
             const windowWithCoupang = window as WindowWithCoupang;
