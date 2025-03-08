@@ -7,9 +7,8 @@ import { useForm } from 'react-hook-form';
 import apiClient from '../utils/apiClient';
 import styled from 'styled-components';
 import { FaTwitter, FaInstagram } from 'react-icons/fa';
-import Script from 'next/script';
 
-// 쿠팡 파트너스 타입 정의
+// 쿠팡 파트너스 타입(옵셔널)
 interface CoupangPartners {
   G: new (options: {
     id: number;
@@ -19,10 +18,6 @@ interface CoupangPartners {
     height: string;
     tsource: string;
   }) => void;
-}
-
-interface WindowWithCoupang extends Window {
-  PartnersCoupang?: CoupangPartners;
 }
 
 interface FormInputs {
@@ -53,6 +48,34 @@ function Footer() {
   );
 }
 
+/**
+ * (1) - 쿠팡 배너 스크립트 HTML
+ * 여기서 <script src="..."></script> + new PartnersCoupang.G(...)를
+ * 하나의 문자열로 묶어서 dangerouslySetInnerHTML로 삽입합니다.
+ * 
+ *  - script 두 개를 이어붙이면 파서 에러가 날 수 있어, 하나에 합치는 경우도 있고
+ *    아래처럼 별도 script 태그 2개를 그냥 이어쓰기도 합니다.
+ */
+const coupangBannerHTML = `
+  <script src="https://ads-partners.coupang.com/g.js"></script>
+  <script>
+    // onload가 아니라, 즉시 window.PartnersCoupang을 확인
+    // 다만, 혹시 스크립트가 늦게 로드될 수도 있으니 setTimeout 등으로 감싸볼 수도 있음
+    (function() {
+      if (window.PartnersCoupang) {
+        new window.PartnersCoupang.G({
+          id: 845588,
+          template: "carousel",
+          trackingCode: "AF2923947",
+          width: "780",
+          height: "90",
+          tsource: ""
+        });
+      }
+    })();
+  </script>
+`;
+
 export default function Home() {
   // 미리보기 URL
   const [preview, setPreview] = useState<string | null>(null);
@@ -73,7 +96,7 @@ export default function Home() {
     }
   }, []);
 
-  // 파일 선택 시 미리보기 세팅
+  // 파일 선택 시 미리보기
   useEffect(() => {
     if (watchFile && watchFile.length > 0) {
       const file = watchFile[0];
@@ -83,7 +106,7 @@ export default function Home() {
     }
   }, [watchFile]);
 
-  // 서버로 이미지 파일 전송하여 예측 요청 (react-query Mutation)
+  // 예측 요청 (react-query)
   const {
     mutate,
     data,
@@ -98,7 +121,7 @@ export default function Home() {
     },
   });
 
-  // 폼 제출 시 실행되는 함수
+  // 폼 제출
   const onSubmit = (formDataInput: FormInputs) => {
     if (!formDataInput.file || formDataInput.file.length === 0) return;
     
@@ -107,14 +130,13 @@ export default function Home() {
     mutate(formData);
   };
 
-  // 트위터 공유
+  // SNS 공유
   const shareToTwitter = () => {
-    const text = `제 반려동물의 성격은 ${data?.personality.join(', ')} 입니다! 여러분의 반려동물 성격도 확인해보세요.`;
+    const text = `제 반려동물의 성격은 ${data?.personality.join(', ')} 입니다!`;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`;
     window.open(twitterUrl, '_blank');
   };
 
-  // 인스타그램 공유 (스토리에 직접 올려야 하는 방식)
   const shareToInstagram = () => {
     alert('인스타그램 공유를 위해 결과 화면을 캡처한 후 인스타그램에 업로드해주세요!');
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
@@ -126,34 +148,12 @@ export default function Home() {
 
   return (
     <>
+      {/* Next.js Head */}
       <Head>
         <title>반려동물 성격 예측 서비스</title>
         <meta name="description" content="이미지를 업로드하여 반려동물의 성격을 예측하세요." />
         <meta name="keywords" content="반려동물, 성격 예측, 이미지 분석, 머신러닝" />
       </Head>
-
-      {/* 쿠팡 파트너스 스크립트 (onLoad 시점에 직접 배너 초기화) */}
-      <Script
-        src="https://ads-partners.coupang.com/g.js"
-        strategy="afterInteractive"
-        onLoad={() => {
-          try {
-            const windowWithCoupang = window as WindowWithCoupang;
-            if (windowWithCoupang.PartnersCoupang) {
-              new windowWithCoupang.PartnersCoupang.G({
-                id: 845588,
-                template: "carousel",
-                trackingCode: "AF2923947",
-                width: "780",
-                height: "90",
-                tsource: ""
-              });
-            }
-          } catch (error) {
-            console.error("쿠팡 배너 초기화 오류:", error);
-          }
-        }}
-      />
 
       <MainContainer>
         {/* 기능 컨테이너 */}
@@ -161,7 +161,6 @@ export default function Home() {
           <Title>우리 강아지는 어떤 성격일까?!</Title>
           <Description>이미지를 업로드해 반려동물의 성격을 예측해보세요!</Description>
 
-          {/* 파일 업로드 폼 */}
           <FormGroup onSubmit={handleSubmit(onSubmit)}>
             <HiddenFileInput
               id="file-upload"
@@ -176,27 +175,17 @@ export default function Home() {
             <Button type="submit">예측하기</Button>
           </FormGroup>
 
-          {/* 업로드한 파일 미리보기 */}
           {preview && (
             <PreviewContainer>
-              <h2
-                style={{
-                  fontSize: '1.125rem',
-                  fontWeight: 500,
-                  color: '#4c51bf',
-                  marginBottom: '0.5rem',
-                }}
-              >
+              <h2 style={{ fontSize: '1.125rem', fontWeight: 500, color: '#4c51bf', marginBottom: '0.5rem' }}>
                 이미지 미리보기
               </h2>
               <PreviewImage src={preview} alt="Preview" />
             </PreviewContainer>
           )}
 
-          {/* 예측 진행 상태 표시 */}
-          {isPending && (
-            <LoadingText>예측 중... 잠시만 기다려주세요.</LoadingText>
-          )}
+          {isPending && <LoadingText>예측 중... 잠시만 기다려주세요.</LoadingText>}
+
           {isError && (
             <ErrorText>
               오류가 발생했습니다:{' '}
@@ -205,7 +194,6 @@ export default function Home() {
             </ErrorText>
           )}
 
-          {/* 예측 결과 */}
           {isSuccess && (
             <ResultContainer ref={resultRef}>
               <ResultTitle>예측 결과</ResultTitle>
@@ -226,7 +214,6 @@ export default function Home() {
                 })}
               </ResultList>
 
-              {/* 공유 섹션 */}
               <ShareContainer>
                 <ShareTitle>결과 공유하기</ShareTitle>
                 <ShareButtonsContainer>
@@ -244,10 +231,10 @@ export default function Home() {
           )}
         </CardContainer>
 
-        {/* 항상 표시되는 쿠팡 파트너스 다이나믹 배너 (푸터보다 위) */}
+        {/* (2) - 쿠팡 배너를 '인라인 스크립트'로 삽입 */}
         <BannerContainer>
-          {/* 스크립트가 로드되면 이 div 내부에 배너가 자동으로 그려집니다. */}
-          <div id="coupang-banner"></div>
+          {/* 여기 dangerouslySetInnerHTML로 '직접' script 태그를 넣습니다 */}
+          <div dangerouslySetInnerHTML={{ __html: coupangBannerHTML }} />
         </BannerContainer>
 
         <Footer />
@@ -256,14 +243,15 @@ export default function Home() {
   );
 }
 
-/* styled-components 정의(아래 내용은 필요에 따라 자유롭게 수정하세요) */
+/* styled-components 정의 */
 const MainContainer = styled.div`
   min-height: 100vh;
   background: linear-gradient(to bottom right, #ebf4ff, #c3dafe);
-  display: flex;
+  /* display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: center; */
+  /* ↑ 만약 레이아웃이 꼬이면 지우거나 수정하세요 */
   padding: 1rem;
 `;
 
@@ -274,6 +262,7 @@ const CardContainer = styled.div`
   border-radius: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
+  margin: 0 auto; /* 가로 가운데 정렬 */
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -312,8 +301,8 @@ const FileLabel = styled.label`
   border-radius: 9999px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
   border: none;
+  transition: background-color 0.2s ease;
 
   &:hover {
     background-color: #4c51bf;
@@ -332,8 +321,8 @@ const Button = styled.button`
   border-radius: 9999px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
   border: none;
+  transition: background-color 0.2s ease;
 
   &:hover {
     background-color: #4c51bf;
@@ -420,14 +409,6 @@ const ProgressBarFill = styled.div<{ progress: number }>`
   transition: width 0.35s ease;
 `;
 
-const FooterContainer = styled.footer`
-  margin-top: 2rem;
-  padding: 1rem 0;
-  text-align: center;
-  font-size: 0.875rem;
-  color: #4c51bf;
-`;
-
 const ShareContainer = styled.div`
   margin-top: 1.5rem;
   border-top: 1px solid #e2e8f0;
@@ -486,10 +467,18 @@ const InstagramShareButton = styled(ShareButton)`
 `;
 
 const BannerContainer = styled.div`
-  margin-top: 2rem;
+  margin: 2rem auto;
   text-align: center;
-  width: 780px;
-  height: 90px;
+  max-width: 780px;
+  width: 100%;
   min-height: 90px;
   border: 1px dashed #ccc;
+`;
+
+const FooterContainer = styled.footer`
+  margin-top: 2rem;
+  padding: 1rem 0;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #4c51bf;
 `;

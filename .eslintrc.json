@@ -1,3 +1,13 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript"
+  ],
+  "rules": {
+    // (1) 인라인 script 태그 사용 시 경고 끄기
+    "@next/next/no-sync-scripts": "off",
+    
+    // (2) React의 dangerouslySetInnerHTML 관련 경고 끄기
+    "react/no-danger": "off"
+  }
 }
