@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 import apiClient from '../utils/apiClient';
 import styled from 'styled-components';
 import { FaTwitter, FaInstagram } from 'react-icons/fa';
-import Image from 'next/image';
 import Script from 'next/script';
 
 interface FormInputs {
