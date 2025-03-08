@@ -30,7 +30,8 @@ function Footer() {
   return (
     <FooterContainer>
       <p>© 2025 MyPetPrediction. All rights reserved.</p>
-      <p>문의: contact@mypetprediction.com</p>
+      <p>문의: devspred@gmail.com</p>
+      <p>이 웹사이트는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p>
     </FooterContainer>
   );
 }
@@ -207,7 +208,23 @@ export default function Home() {
                   );
                 })}
               </ResultList>
-              
+              <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+      <a href="https://link.coupang.com/a/cibLgk" target="_blank" rel="noopener noreferrer">
+        <img
+          src="https://ads-partners.coupang.com/banners/845582?subId=&traceId=V0-301-7e6e8eb8ddfa1bfb-I845582&w=728&h=90"
+          alt="쿠팡 파트너스 배너"
+          style={{ border: 'none' }}
+        />
+      </a>
+      <script src="https://ads-partners.coupang.com/g.js"></script>
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `
+          new PartnersCoupang.G({"id":845582,"template":"banner","trackingCode":"AF2923947","width":"728","height":"90"});
+        `,
+      }}
+    />
+    </div>
               {/* 소셜 미디어 공유 버튼 */}
               <ShareContainer>
                 <ShareTitle>결과 공유하기</ShareTitle>
@@ -398,7 +415,7 @@ const ProgressBarContainer = styled.div`
   width: 100%;
   height: 8px;
   background-color: #e2e8f0; /* gray-200 */
-  border-radius: 9999px;
+  border-햣radius: 9999px;
   overflow: hidden;
 `;
 
