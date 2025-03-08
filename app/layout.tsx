@@ -36,7 +36,9 @@ export default function RootLayout({
     <html lang="ko">
       <head>
 <Script async src="https://www.googletagmanager.com/gtag/js?id=G-70J2H7PC4J"></Script>
-<Script dangerouslySetInnerHTML={{
+<Script 
+id="gtag-init"
+dangerouslySetInnerHTML={{
   __html: `
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
