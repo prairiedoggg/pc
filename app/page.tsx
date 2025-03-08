@@ -222,6 +222,7 @@ export default function Home() {
       </a>
       <Script src="https://ads-partners.coupang.com/g.js"></Script>
     <Script
+      id="coupang-banner"
       dangerouslySetInnerHTML={{
         __html: `
           new PartnersCoupang.G({"id":845582,"template":"banner","trackingCode":"AF2923947","width":"728","height":"90"});

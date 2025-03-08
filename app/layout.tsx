@@ -2,6 +2,8 @@ import { Metadata } from 'next'
 import localFont from "next/font/local";
 import "./globals.css";
 import Providers from "./providers";
+import Script from 'next/Script';
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -33,8 +35,8 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-70J2H7PC4J"></script>
-<script dangerouslySetInnerHTML={{
+<Script async src="https://www.googletagmanager.com/gtag/js?id=G-70J2H7PC4J"></Script>
+<Script dangerouslySetInnerHTML={{
   __html: `
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -42,7 +44,7 @@ export default function RootLayout({
     gtag('config', 'G-70J2H7PC4J');
   `
 }} />
-        <script
+        <Script
           async
           src="https://pagead.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2568866467581564"
           crossOrigin="anonymous"
