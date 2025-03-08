@@ -121,18 +121,13 @@ export default function Home() {
         <title>반려동물 성격 예측 서비스</title>
         <meta name="description" content="이미지를 업로드하여 반려동물의 성격을 예측하세요." />
         <meta name="keywords" content="반려동물, 성격 예측, 이미지 분석, 머신러닝" />
-        
-        {/* AdSense 메타 태그
-        <meta name="google-adsense-account" content="ca-pub-2568866467581564" /> */}
       </Head>
-      
-      {/* AdSense 스크립트 - next/script 사용
+
+      {/* 쿠팡 파트너스 스크립트 로드 */}
       <Script
-        async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2568866467581564"
-        strategy="afterInteractive"
-        crossOrigin="anonymous"
-      /> */}
+        src="https://ads-partners.coupang.com/g.js"
+        strategy="afterInteractive" // 페이지가 상호작용 가능한 상태가 된 후 로드
+      />
 
       <MainContainer>
         <CardContainer>
@@ -145,8 +140,6 @@ export default function Home() {
               id="file-upload"
               type="file"
               accept=".png, .jpg, .jpeg"
-
-              // react-hook-form으로 파일을 등록
               {...register('file', { required: true })}
             />
 
@@ -210,27 +203,28 @@ export default function Home() {
                   );
                 })}
               </ResultList>
+
+              {/* 쿠팡 파트너스 다이나믹 배너 */}
               <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-      <a href="https://link.coupang.com/a/cibLgk" target="_blank" rel="noopener noreferrer">
-        <Image
-          src="https://ads-partners.coupang.com/banners/845582?subId=&traceId=V0-301-7e6e8eb8ddfa1bfb-I845582&w=728&h=90"
-          alt="쿠팡 파트너스 배너"
-          style={{ border: 'none' }}
-          width={728}
-          height={90}
-        />
-      </a>
-      <Script src="https://ads-partners.coupang.com/g.js"></Script>
-    <Script
-      id="coupang-banner"
-      strategy="afterInteractive" // 페이지가 상호작용 가능한 상태가 된 후 로드
-      dangerouslySetInnerHTML={{
-        __html: `
-          new PartnersCoupang.G({"id":845582,"template":"banner","trackingCode":"AF2923947","width":"728","height":"90"});
-        `,
-      }}
-    />
-    </div>
+                <div id="coupang-banner" />
+                <Script
+                  id="coupang-dynamic-banner"
+                  strategy="afterInteractive"
+                  dangerouslySetInnerHTML={{
+                    __html: `
+                      new PartnersCoupang.G({
+                        id: 845588,
+                        template: "carousel",
+                        trackingCode: "AF2923947",
+                        width: "780",
+                        height: "90",
+                        tsource: ""
+                      });
+                    `,
+                  }}
+                />
+              </div>
+
               {/* 소셜 미디어 공유 버튼 */}
               <ShareContainer>
                 <ShareTitle>결과 공유하기</ShareTitle>
@@ -247,20 +241,6 @@ export default function Home() {
               </ShareContainer>
             </ResultContainer>
           )}
-
-          {/* 쿠팡 광고 */}
-          {/* <Script src="https://ads-partners.coupang.com/g.js" />
-          <Script id="coupang-banner">
-            {`
-              new PartnersCoupang.G({
-                "id":831036,
-                "template":"banner",
-                "trackingCode":"AF2923947",
-                "width":"728",
-                "height":"90"
-              });
-            `}
-          </Script> */}
         </CardContainer>
         <Footer />
       </MainContainer>
@@ -421,7 +401,7 @@ const ProgressBarContainer = styled.div`
   width: 100%;
   height: 8px;
   background-color: #e2e8f0; /* gray-200 */
-  border-햣radius: 9999px;
+  border-radius: 9999px;
   overflow: hidden;
 `;
 
