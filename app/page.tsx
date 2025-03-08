@@ -36,40 +36,12 @@ function Footer() {
   );
 }
 
-/**
- * (1) - 쿠팡 배너 스크립트 HTML
- * 여기서 <script src="..."></script> + new PartnersCoupang.G(...)를
- * 하나의 문자열로 묶어서 dangerouslySetInnerHTML로 삽입합니다.
- * 
- *  - script 두 개를 이어붙이면 파서 에러가 날 수 있어, 하나에 합치는 경우도 있고
- *    아래처럼 별도 script 태그 2개를 그냥 이어쓰기도 합니다.
- */
-const coupangBannerHTML = `
-  <script src="https://ads-partners.coupang.com/g.js"></script>
-  <script>
-    // onload가 아니라, 즉시 window.PartnersCoupang을 확인
-    // 다만, 혹시 스크립트가 늦게 로드될 수도 있으니 setTimeout 등으로 감싸볼 수도 있음
-    (function() {
-      if (window.PartnersCoupang) {
-        new window.PartnersCoupang.G({
-          id: 845588,
-          template: "carousel",
-          trackingCode: "AF2923947",
-          width: "780",
-          height: "90",
-          tsource: ""
-        });
-      }
-    })();
-  </script>
-`;
-
 export default function Home() {
   // 미리보기 URL
   const [preview, setPreview] = useState<string | null>(null);
   // 공유할 URL
   const [shareUrl, setShareUrl] = useState<string>("");
-  // 결과 화면 캡처용 Ref
+  // 결과화면 캡처용 Ref
   const resultRef = useRef<HTMLDivElement>(null);
 
   // react-hook-form
@@ -77,7 +49,7 @@ export default function Home() {
   // 파일 선택 변화를 watch
   const watchFile = watch('file');
 
-  // 현재 페이지의 URL 설정
+  // 현재 페이지의 URL
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setShareUrl(window.location.href);
@@ -94,7 +66,7 @@ export default function Home() {
     }
   }, [watchFile]);
 
-  // 예측 요청 (react-query)
+  // 서버로 이미지 파일 전송하여 예측 (react-query Mutation)
   const {
     mutate,
     data,
@@ -112,19 +84,19 @@ export default function Home() {
   // 폼 제출
   const onSubmit = (formDataInput: FormInputs) => {
     if (!formDataInput.file || formDataInput.file.length === 0) return;
-    
     const formData = new FormData();
     formData.append('file', formDataInput.file[0]);
     mutate(formData);
   };
 
-  // SNS 공유
+  // 트위터 공유
   const shareToTwitter = () => {
     const text = `제 반려동물의 성격은 ${data?.personality.join(', ')} 입니다!`;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`;
     window.open(twitterUrl, '_blank');
   };
 
+  // 인스타그램 공유 (스토리에 직접 올리는 방식)
   const shareToInstagram = () => {
     alert('인스타그램 공유를 위해 결과 화면을 캡처한 후 인스타그램에 업로드해주세요!');
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
@@ -136,7 +108,6 @@ export default function Home() {
 
   return (
     <>
-      {/* Next.js Head */}
       <Head>
         <title>반려동물 성격 예측 서비스</title>
         <meta name="description" content="이미지를 업로드하여 반려동물의 성격을 예측하세요." />
@@ -144,7 +115,7 @@ export default function Home() {
       </Head>
 
       <MainContainer>
-        {/* 기능 컨테이너 */}
+        {/* 카드 */}
         <CardContainer>
           <Title>우리 강아지는 어떤 성격일까?!</Title>
           <Description>이미지를 업로드해 반려동물의 성격을 예측해보세요!</Description>
@@ -173,7 +144,7 @@ export default function Home() {
           )}
 
           {isPending && <LoadingText>예측 중... 잠시만 기다려주세요.</LoadingText>}
-
+          
           {isError && (
             <ErrorText>
               오류가 발생했습니다:{' '}
@@ -219,10 +190,16 @@ export default function Home() {
           )}
         </CardContainer>
 
-        {/* (2) - 쿠팡 배너를 '인라인 스크립트'로 삽입 */}
+        {/* 여기에서 쿠팡 IFRAME 방식을 그대로 넣는다 */}
         <BannerContainer>
-          {/* 여기 dangerouslySetInnerHTML로 '직접' script 태그를 넣습니다 */}
-          <div dangerouslySetInnerHTML={{ __html: coupangBannerHTML }} />
+          <Iframe
+            src="https://ads-partners.coupang.com/widgets.html?id=845588&template=carousel&trackingCode=AF2923947&subId=&width=780&height=90&tsource="
+            width="780"
+            height="90"
+            frameBorder="0"
+            scrolling="no"
+            referrerPolicy="unsafe-url"
+          />
         </BannerContainer>
 
         <Footer />
@@ -231,16 +208,13 @@ export default function Home() {
   );
 }
 
-/* styled-components 정의 */
+/* ----- styled components ----- */
+
 const MainContainer = styled.div`
   min-height: 100vh;
   background: linear-gradient(to bottom right, #ebf4ff, #c3dafe);
-  /* display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center; */
-  /* ↑ 만약 레이아웃이 꼬이면 지우거나 수정하세요 */
   padding: 1rem;
+  /* 다른 레이아웃이 필요하면 flex로 수정하세요 */
 `;
 
 const CardContainer = styled.div`
@@ -250,7 +224,7 @@ const CardContainer = styled.div`
   border-radius: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
-  margin: 0 auto; /* 가로 가운데 정렬 */
+  margin: 0 auto; 
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -291,7 +265,6 @@ const FileLabel = styled.label`
   cursor: pointer;
   border: none;
   transition: background-color 0.2s ease;
-
   &:hover {
     background-color: #4c51bf;
   }
@@ -311,7 +284,6 @@ const Button = styled.button`
   cursor: pointer;
   border: none;
   transition: background-color 0.2s ease;
-
   &:hover {
     background-color: #4c51bf;
   }
@@ -432,7 +404,6 @@ const ShareButton = styled.button`
 const TwitterShareButton = styled(ShareButton)`
   background-color: #1DA1F2;
   color: white;
-  
   &:hover {
     background-color: #0c85d0;
   }
@@ -440,15 +411,14 @@ const TwitterShareButton = styled(ShareButton)`
 
 const InstagramShareButton = styled(ShareButton)`
   background: linear-gradient(
-    45deg, 
-    #f09433 0%, 
-    #e6683c 25%, 
-    #dc2743 50%, 
-    #cc2366 75%, 
+    45deg,
+    #f09433 0%,
+    #e6683c 25%,
+    #dc2743 50%,
+    #cc2366 75%,
     #bc1888 100%
   );
   color: white;
-  
   &:hover {
     opacity: 0.9;
   }
@@ -461,6 +431,16 @@ const BannerContainer = styled.div`
   width: 100%;
   min-height: 90px;
   border: 1px dashed #ccc;
+`;
+
+/** 
+ * 쿠팡의 iframe 스타일.
+ * styled-components에 iframe을 담아주었습니다.
+ */
+const Iframe = styled.iframe`
+  border: none;
+  display: block;
+  margin: 0 auto;
 `;
 
 const FooterContainer = styled.footer`
