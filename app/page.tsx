@@ -44,6 +44,8 @@ export default function Home() {
   const [shareUrl, setShareUrl] = useState<string>("");
   // 결과 화면 캡처용 Ref
   const resultRef = useRef<HTMLDivElement>(null);
+  // 쿠팡 배너 스크립트 로드 여부
+  const [coupangScriptLoaded, setCoupangScriptLoaded] = useState(false);
 
   // react-hook-form
   const { register, handleSubmit, watch } = useForm<FormInputs>();
@@ -67,6 +69,24 @@ export default function Home() {
       setPreview(null);
     }
   }, [watchFile]);
+
+  // 쿠팡 배너 초기화
+  useEffect(() => {
+    if (coupangScriptLoaded && typeof window !== 'undefined' && (window as any).PartnersCoupang) {
+      try {
+        new (window as any).PartnersCoupang.G({
+          id: 845588,
+          template: "carousel",
+          trackingCode: "AF2923947",
+          width: "780",
+          height: "90",
+          tsource: ""
+        });
+      } catch (error) {
+        console.error("쿠팡 배너 초기화 오류:", error);
+      }
+    }
+  }, [coupangScriptLoaded]);
 
   // 서버로 이미지 파일 전송하여 예측 요청 (react-query Mutation)
   const {
@@ -109,6 +129,11 @@ export default function Home() {
     }
   };
 
+  // 스크립트 로드 완료 핸들러
+  const handleCoupangScriptLoad = () => {
+    setCoupangScriptLoaded(true);
+  };
+
   return (
     <>
       <Head>
@@ -121,6 +146,7 @@ export default function Home() {
       <Script
         src="https://ads-partners.coupang.com/g.js"
         strategy="afterInteractive"
+        onLoad={handleCoupangScriptLoad}
       />
 
       <MainContainer>
@@ -214,23 +240,7 @@ export default function Home() {
 
         {/* 항상 표시되는 쿠팡 파트너스 다이나믹 배너 (푸터보다 위) */}
         <BannerContainer>
-          <div id="coupang-banner" />
-          <Script
-            id="coupang-dynamic-banner"
-            strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `
-                new PartnersCoupang.G({
-                  id: 845588,
-                  template: "carousel",
-                  trackingCode: "AF2923947",
-                  width: "780",
-                  height: "90",
-                  tsource: ""
-                });
-              `,
-            }}
-          />
+          <div id="coupang-banner" style={{ width: "780px", height: "90px", border: "1px solid #eee" }} />
         </BannerContainer>
 
         {/* 푸터 */}
@@ -472,4 +482,7 @@ const InstagramShareButton = styled(ShareButton)`
 const BannerContainer = styled.div`
   margin-top: 2rem;
   text-align: center;
+  width: 780px;
+  height: 90px;
+  min-height: 90px;
 `;
