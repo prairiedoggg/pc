@@ -9,6 +9,22 @@ import styled from 'styled-components';
 import { FaTwitter, FaInstagram } from 'react-icons/fa';
 import Script from 'next/script';
 
+// 쿠팡 파트너스 타입 정의
+interface CoupangPartners {
+  G: new (options: {
+    id: number;
+    template: string;
+    trackingCode: string;
+    width: string;
+    height: string;
+    tsource: string;
+  }) => void;
+}
+
+interface WindowWithCoupang extends Window {
+  PartnersCoupang?: CoupangPartners;
+}
+
 interface FormInputs {
   file: FileList;
 }
@@ -72,16 +88,19 @@ export default function Home() {
 
   // 쿠팡 배너 초기화
   useEffect(() => {
-    if (coupangScriptLoaded && typeof window !== 'undefined' && (window as any).PartnersCoupang) {
+    if (coupangScriptLoaded && typeof window !== 'undefined') {
       try {
-        new (window as any).PartnersCoupang.G({
-          id: 845588,
-          template: "carousel",
-          trackingCode: "AF2923947",
-          width: "780",
-          height: "90",
-          tsource: ""
-        });
+        const windowWithCoupang = window as WindowWithCoupang;
+        if (windowWithCoupang.PartnersCoupang) {
+          new windowWithCoupang.PartnersCoupang.G({
+            id: 845588,
+            template: "carousel",
+            trackingCode: "AF2923947",
+            width: "780",
+            height: "90",
+            tsource: ""
+          });
+        }
       } catch (error) {
         console.error("쿠팡 배너 초기화 오류:", error);
       }
@@ -240,10 +259,9 @@ export default function Home() {
 
         {/* 항상 표시되는 쿠팡 파트너스 다이나믹 배너 (푸터보다 위) */}
         <BannerContainer>
-          <div id="coupang-banner" style={{ width: "780px", height: "90px", border: "1px solid #eee" }} />
+          <div id="coupang-banner"></div>
         </BannerContainer>
 
-        {/* 푸터 */}
         <Footer />
       </MainContainer>
     </>
@@ -485,4 +503,5 @@ const BannerContainer = styled.div`
   width: 780px;
   height: 90px;
   min-height: 90px;
+  border: 1px dashed #ccc;
 `;
