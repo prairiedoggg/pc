@@ -8,18 +8,6 @@ import apiClient from '../utils/apiClient';
 import styled from 'styled-components';
 import { FaTwitter, FaInstagram } from 'react-icons/fa';
 
-// 쿠팡 파트너스 타입(옵셔널)
-interface CoupangPartners {
-  G: new (options: {
-    id: number;
-    template: string;
-    trackingCode: string;
-    width: string;
-    height: string;
-    tsource: string;
-  }) => void;
-}
-
 interface FormInputs {
   file: FileList;
 }
