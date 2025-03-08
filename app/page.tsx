@@ -7,6 +7,8 @@ import { useForm } from 'react-hook-form';
 import apiClient from '../utils/apiClient';
 import styled from 'styled-components';
 import { FaTwitter, FaInstagram } from 'react-icons/fa';
+import Image from 'next/image';
+import Script from 'next/script';
 
 interface FormInputs {
   file: FileList;
@@ -210,14 +212,16 @@ export default function Home() {
               </ResultList>
               <div style={{ marginTop: '2rem', textAlign: 'center' }}>
       <a href="https://link.coupang.com/a/cibLgk" target="_blank" rel="noopener noreferrer">
-        <img
+        <Image
           src="https://ads-partners.coupang.com/banners/845582?subId=&traceId=V0-301-7e6e8eb8ddfa1bfb-I845582&w=728&h=90"
           alt="쿠팡 파트너스 배너"
           style={{ border: 'none' }}
+          width={728}
+          height={90}
         />
       </a>
-      <script src="https://ads-partners.coupang.com/g.js"></script>
-    <script
+      <Script src="https://ads-partners.coupang.com/g.js"></Script>
+    <Script
       dangerouslySetInnerHTML={{
         __html: `
           new PartnersCoupang.G({"id":845582,"template":"banner","trackingCode":"AF2923947","width":"728","height":"90"});
