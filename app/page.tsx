@@ -60,12 +60,9 @@ export default function Home() {
   const [shareUrl, setShareUrl] = useState<string>("");
   // 결과 화면 캡처용 Ref
   const resultRef = useRef<HTMLDivElement>(null);
-  // 쿠팡 배너 스크립트 로드 여부
-  const [coupangScriptLoaded, setCoupangScriptLoaded] = useState(false);
 
   // react-hook-form
   const { register, handleSubmit, watch } = useForm<FormInputs>();
-
   // 파일 선택 변화를 watch
   const watchFile = watch('file');
 
@@ -85,27 +82,6 @@ export default function Home() {
       setPreview(null);
     }
   }, [watchFile]);
-
-  // 쿠팡 배너 초기화
-  useEffect(() => {
-    if (coupangScriptLoaded && typeof window !== 'undefined') {
-      try {
-        const windowWithCoupang = window as WindowWithCoupang;
-        if (windowWithCoupang.PartnersCoupang) {
-          new windowWithCoupang.PartnersCoupang.G({
-            id: 845588,
-            template: "carousel",
-            trackingCode: "AF2923947",
-            width: "780",
-            height: "90",
-            tsource: ""
-          });
-        }
-      } catch (error) {
-        console.error("쿠팡 배너 초기화 오류:", error);
-      }
-    }
-  }, [coupangScriptLoaded]);
 
   // 서버로 이미지 파일 전송하여 예측 요청 (react-query Mutation)
   const {
@@ -148,11 +124,6 @@ export default function Home() {
     }
   };
 
-  // 스크립트 로드 완료 핸들러
-  const handleCoupangScriptLoad = () => {
-    setCoupangScriptLoaded(true);
-  };
-
   return (
     <>
       <Head>
@@ -161,11 +132,27 @@ export default function Home() {
         <meta name="keywords" content="반려동물, 성격 예측, 이미지 분석, 머신러닝" />
       </Head>
 
-      {/* 쿠팡 파트너스 스크립트: 페이지 로드 후 로딩 */}
+      {/* 쿠팡 파트너스 스크립트 (onLoad 시점에 직접 배너 초기화) */}
       <Script
         src="https://ads-partners.coupang.com/g.js"
         strategy="afterInteractive"
-        onLoad={handleCoupangScriptLoad}
+        onLoad={() => {
+          try {
+            const windowWithCoupang = window as WindowWithCoupang;
+            if (windowWithCoupang.PartnersCoupang) {
+              new windowWithCoupang.PartnersCoupang.G({
+                id: 845588,
+                template: "carousel",
+                trackingCode: "AF2923947",
+                width: "780",
+                height: "90",
+                tsource: ""
+              });
+            }
+          } catch (error) {
+            console.error("쿠팡 배너 초기화 오류:", error);
+          }
+        }}
       />
 
       <MainContainer>
@@ -259,6 +246,7 @@ export default function Home() {
 
         {/* 항상 표시되는 쿠팡 파트너스 다이나믹 배너 (푸터보다 위) */}
         <BannerContainer>
+          {/* 스크립트가 로드되면 이 div 내부에 배너가 자동으로 그려집니다. */}
           <div id="coupang-banner"></div>
         </BannerContainer>
 
