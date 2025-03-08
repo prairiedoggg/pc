@@ -40,26 +40,25 @@ function Footer() {
 export default function Home() {
   // 미리보기 URL
   const [preview, setPreview] = useState<string | null>(null);
-  // 공유 URL
+  // 공유할 URL
   const [shareUrl, setShareUrl] = useState<string>("");
-  // 결과 캡처를 위한 ref
+  // 결과 화면 캡처용 Ref
   const resultRef = useRef<HTMLDivElement>(null);
 
-  // react-hook-form 사용
-  // - watch('file')를 통해 파일 선택 변화를 감지
+  // react-hook-form
   const { register, handleSubmit, watch } = useForm<FormInputs>();
 
-  // watch로 file 변화를 감지
+  // 파일 선택 변화를 watch
   const watchFile = watch('file');
 
-  // 현재 URL 설정
+  // 현재 페이지의 URL 설정
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setShareUrl(window.location.href);
     }
   }, []);
 
-  // 파일이 바뀔 때마다 preview 갱신
+  // 파일 선택 시 미리보기 세팅
   useEffect(() => {
     if (watchFile && watchFile.length > 0) {
       const file = watchFile[0];
@@ -69,7 +68,7 @@ export default function Home() {
     }
   }, [watchFile]);
 
-  // react-query mutation
+  // 서버로 이미지 파일 전송하여 예측 요청 (react-query Mutation)
   const {
     mutate,
     data,
@@ -84,29 +83,25 @@ export default function Home() {
     },
   });
 
-  // 파일 제출 시 예측 호출
-  const onSubmit = (data: FormInputs) => {
-    if (!data.file || data.file.length === 0) return;
+  // 폼 제출 시 실행되는 함수
+  const onSubmit = (formDataInput: FormInputs) => {
+    if (!formDataInput.file || formDataInput.file.length === 0) return;
     
     const formData = new FormData();
-    formData.append('file', data.file[0]);
+    formData.append('file', formDataInput.file[0]);
     mutate(formData);
   };
 
-  // 트위터로 결과 공유하기
+  // 트위터 공유
   const shareToTwitter = () => {
-    // 트위터 공유 내용
     const text = `제 반려동물의 성격은 ${data?.personality.join(', ')} 입니다! 여러분의 반려동물 성격도 확인해보세요.`;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`;
     window.open(twitterUrl, '_blank');
   };
 
-  // 인스타그램 스토리 공유 (제한적인 기능)
+  // 인스타그램 공유 (스토리에 직접 올려야 하는 방식)
   const shareToInstagram = () => {
-    // 인스타그램은 직접적인 공유 API가 제한적이라 모바일 앱으로 이동
     alert('인스타그램 공유를 위해 결과 화면을 캡처한 후 인스타그램에 업로드해주세요!');
-    
-    // 모바일에서 인스타그램 앱 열기
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
       window.location.href = 'instagram://';
     } else {
@@ -122,13 +117,14 @@ export default function Home() {
         <meta name="keywords" content="반려동물, 성격 예측, 이미지 분석, 머신러닝" />
       </Head>
 
-      {/* 쿠팡 파트너스 스크립트 로드 */}
+      {/* 쿠팡 파트너스 스크립트: 페이지 로드 후 로딩 */}
       <Script
         src="https://ads-partners.coupang.com/g.js"
-        strategy="afterInteractive" // 페이지가 상호작용 가능한 상태가 된 후 로드
+        strategy="afterInteractive"
       />
 
       <MainContainer>
+        {/* 기능 컨테이너 */}
         <CardContainer>
           <Title>우리 강아지는 어떤 성격일까?!</Title>
           <Description>이미지를 업로드해 반려동물의 성격을 예측해보세요!</Description>
@@ -141,17 +137,14 @@ export default function Home() {
               accept=".png, .jpg, .jpeg"
               {...register('file', { required: true })}
             />
-
             <FileLabel htmlFor="file-upload">
               <IconImage src="/file-regular.svg" alt="파일 아이콘" />
               사진 선택
             </FileLabel>
-
-            {/* 폼 제출 버튼 */}
             <Button type="submit">예측하기</Button>
           </FormGroup>
 
-          {/* 미리보기 */}
+          {/* 업로드한 파일 미리보기 */}
           {preview && (
             <PreviewContainer>
               <h2
@@ -168,12 +161,10 @@ export default function Home() {
             </PreviewContainer>
           )}
 
-          {/* 로딩 표시 */}
+          {/* 예측 진행 상태 표시 */}
           {isPending && (
             <LoadingText>예측 중... 잠시만 기다려주세요.</LoadingText>
           )}
-
-          {/* 에러 표시 */}
           {isError && (
             <ErrorText>
               오류가 발생했습니다:{' '}
@@ -203,28 +194,7 @@ export default function Home() {
                 })}
               </ResultList>
 
-              {/* 쿠팡 파트너스 다이나믹 배너 */}
-              <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-                <div id="coupang-banner" />
-                <Script
-                  id="coupang-dynamic-banner"
-                  strategy="afterInteractive"
-                  dangerouslySetInnerHTML={{
-                    __html: `
-                      new PartnersCoupang.G({
-                        id: 845588,
-                        template: "carousel",
-                        trackingCode: "AF2923947",
-                        width: "780",
-                        height: "90",
-                        tsource: ""
-                      });
-                    `,
-                  }}
-                />
-              </div>
-
-              {/* 소셜 미디어 공유 버튼 */}
+              {/* 공유 섹션 */}
               <ShareContainer>
                 <ShareTitle>결과 공유하기</ShareTitle>
                 <ShareButtonsContainer>
@@ -241,13 +211,36 @@ export default function Home() {
             </ResultContainer>
           )}
         </CardContainer>
+
+        {/* 항상 표시되는 쿠팡 파트너스 다이나믹 배너 (푸터보다 위) */}
+        <BannerContainer>
+          <div id="coupang-banner" />
+          <Script
+            id="coupang-dynamic-banner"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                new PartnersCoupang.G({
+                  id: 845588,
+                  template: "carousel",
+                  trackingCode: "AF2923947",
+                  width: "780",
+                  height: "90",
+                  tsource: ""
+                });
+              `,
+            }}
+          />
+        </BannerContainer>
+
+        {/* 푸터 */}
         <Footer />
       </MainContainer>
     </>
   );
 }
 
-/* styled-components 정의 */
+/* styled-components 정의(아래 내용은 필요에 따라 자유롭게 수정하세요) */
 const MainContainer = styled.div`
   min-height: 100vh;
   background: linear-gradient(to bottom right, #ebf4ff, #c3dafe);
@@ -274,12 +267,12 @@ const Title = styled.h1`
   font-size: 1.5rem;
   font-weight: bold;
   text-align: center;
-  color: #4c51bf; /* 인디고-800 근접 */
+  color: #4c51bf;
 `;
 
 const Description = styled.p`
   text-align: center;
-  color: #2d3748; /* gray-800 근접 */
+  color: #2d3748;
 `;
 
 const FormGroup = styled.form`
@@ -298,7 +291,7 @@ const FileLabel = styled.label`
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1.5rem;
-  background-color: #5a67d8; /* 인디고-600 근접 */
+  background-color: #5a67d8;
   color: #fff;
   border-radius: 9999px;
   font-weight: 600;
@@ -307,7 +300,7 @@ const FileLabel = styled.label`
   border: none;
 
   &:hover {
-    background-color: #4c51bf; /* 인디고-700 근접 */
+    background-color: #4c51bf;
   }
 `;
 
@@ -318,7 +311,7 @@ const IconImage = styled.img`
 
 const Button = styled.button`
   padding: 0.5rem 1.5rem;
-  background-color: #5a67d8; /* 인디고-600 근접 */
+  background-color: #5a67d8;
   color: #fff;
   border-radius: 9999px;
   font-weight: 600;
@@ -327,7 +320,7 @@ const Button = styled.button`
   border: none;
 
   &:hover {
-    background-color: #4c51bf; /* 인디고-700 근접 */
+    background-color: #4c51bf;
   }
 `;
 
@@ -361,7 +354,7 @@ const ResultContainer = styled.div`
 const ResultTitle = styled.h2`
   font-size: 1.25rem;
   font-weight: 600;
-  color: #4c51bf; /* 인디고-700 근접 */
+  color: #4c51bf;
   margin-bottom: 0.5rem;
 `;
 
@@ -372,7 +365,7 @@ const ResultList = styled.ul`
 `;
 
 const ResultItem = styled.li`
-  background-color: #ebf4ff; /* 인디고-50 */
+  background-color: #ebf4ff;
   padding: 0.7rem;
   border-radius: 0.5rem;
   display: flex;
@@ -387,19 +380,19 @@ const TextGroup = styled.div`
 `;
 
 const PersonalityText = styled.span`
-  color: #4c51bf; /* 인디고-800 */
+  color: #4c51bf;
   font-weight: 500;
 `;
 
 const ConfidenceValue = styled.span`
-  color: #5a67d8; /* 인디고-600 */
+  color: #5a67d8;
   font-weight: 500;
 `;
 
 const ProgressBarContainer = styled.div`
   width: 100%;
   height: 8px;
-  background-color: #e2e8f0; /* gray-200 */
+  background-color: #e2e8f0;
   border-radius: 9999px;
   overflow: hidden;
 `;
@@ -407,7 +400,7 @@ const ProgressBarContainer = styled.div`
 const ProgressBarFill = styled.div<{ progress: number }>`
   width: ${(props) => props.progress}%;
   height: 100%;
-  background-color: #5a67d8; /* 인디고-600 */
+  background-color: #5a67d8;
   transition: width 0.35s ease;
 `;
 
@@ -415,11 +408,10 @@ const FooterContainer = styled.footer`
   margin-top: 2rem;
   padding: 1rem 0;
   text-align: center;
-  font-size: 0.875rem;  /* 글씨 크기는 편의에 맞게 조절하세요 */
-  color: #4c51bf;       /* 인디고-700 근접 */
+  font-size: 0.875rem;
+  color: #4c51bf;
 `;
 
-// 공유 관련 스타일 컴포넌트
 const ShareContainer = styled.div`
   margin-top: 1.5rem;
   border-top: 1px solid #e2e8f0;
@@ -462,10 +454,22 @@ const TwitterShareButton = styled(ShareButton)`
 `;
 
 const InstagramShareButton = styled(ShareButton)`
-  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  background: linear-gradient(
+    45deg, 
+    #f09433 0%, 
+    #e6683c 25%, 
+    #dc2743 50%, 
+    #cc2366 75%, 
+    #bc1888 100%
+  );
   color: white;
   
   &:hover {
     opacity: 0.9;
   }
+`;
+
+const BannerContainer = styled.div`
+  margin-top: 2rem;
+  text-align: center;
 `;
