@@ -3,7 +3,9 @@
  */
 const nextConfig = {
   output: 'export',
- 
+  images: {
+    domains: ['ads-partners.coupang.com'], // 쿠팡 파트너스 이미지 도메인 허용
+  },
   // Optional: Change links `/me` -> `/me/` and emit `/me.html` -> `/me/index.html`
   // trailingSlash: true,
  

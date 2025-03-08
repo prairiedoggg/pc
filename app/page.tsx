@@ -223,6 +223,7 @@ export default function Home() {
       <Script src="https://ads-partners.coupang.com/g.js"></Script>
     <Script
       id="coupang-banner"
+      strategy="afterInteractive" // 페이지가 상호작용 가능한 상태가 된 후 로드
       dangerouslySetInnerHTML={{
         __html: `
           new PartnersCoupang.G({"id":845582,"template":"banner","trackingCode":"AF2923947","width":"728","height":"90"});
