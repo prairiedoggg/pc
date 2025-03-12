@@ -436,10 +436,6 @@ const BannerContainer = styled.div`
   border: 1px dashed #ccc;
 `;
 
-/** 
- * 쿠팡의 iframe 스타일.
- * styled-components에 iframe을 담아주었습니다.
- */
 const Iframe = styled.iframe`
   border: none;
   display: block;

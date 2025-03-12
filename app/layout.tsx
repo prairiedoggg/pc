@@ -44,6 +44,11 @@ export default function RootLayout({
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
               gtag('config', 'G-70J2H7PC4J');
+              gtag('event', 'conversion_event_page_view', {
+                event_category: 'engagement',
+                event_label: 'page_view',
+                value: 1
+              });
             `
           }} />
         <Script
