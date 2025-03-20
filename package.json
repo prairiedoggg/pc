@@ -10,9 +10,10 @@
     "export": "next export"
   },
   "dependencies": {
+    "@niledatabase/nile-mcp-server": "^1.4.0",
     "@tanstack/react-query": "^5.62.15",
     "axios": "^1.7.7",
-    "next": "^14.0.0",
+    "next": "^15.3.0-canary.13",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.53.1",
