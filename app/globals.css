@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* :root {
   --background: #ffffff;
   --foreground: #f0fbb4;
@@ -40,3 +44,96 @@ a {
     color-scheme: white;
   }
 } */
+
+/* Tailwind CSS 커스텀 유틸리티 클래스 */
+@layer components {
+  .container-main {
+    @apply min-h-screen bg-gradient-to-br from-primary-light to-secondary-light pt-8 pb-8 px-4 md:px-8 flex flex-col items-center;
+  }
+  
+  .content-container {
+    @apply max-w-3xl w-full bg-white rounded-lg shadow-card p-5 md:p-8 my-8;
+  }
+  
+  .title-main {
+    @apply text-2xl md:text-3xl text-primary mb-6 md:mb-8 text-center font-bold;
+  }
+  
+  .section {
+    @apply mb-8;
+  }
+  
+  .section-title {
+    @apply text-xl text-primary-dark mb-4 border-b-2 border-secondary-light pb-2 font-semibold;
+  }
+  
+  .paragraph {
+    @apply mb-4 leading-relaxed text-secondary-dark;
+  }
+  
+  .list {
+    @apply ml-4 md:ml-6 mb-6 space-y-3;
+  }
+  
+  .list-item {
+    @apply mb-2 leading-relaxed text-secondary-dark;
+  }
+  
+  /* 강조 텍스트 스타일 개선 */
+  .list-item strong {
+    @apply block text-center text-primary-dark mb-2 bg-primary-light py-1 px-2 rounded font-bold;
+  }
+  
+  .footer {
+    @apply text-center mt-auto py-4 w-full text-primary text-sm;
+  }
+  
+  .intro-message {
+    @apply text-base md:text-lg leading-relaxed text-gray-600 mb-8 bg-secondary p-4 md:p-6 rounded-lg border-l-4 border-primary font-medium;
+  }
+  
+  .conclusion {
+    @apply mt-8 p-4 bg-primary-light rounded-lg leading-relaxed text-primary font-medium;
+  }
+}
+
+/* 콘텐츠 컨테이너 일관성 유지 */
+.container-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem; /* 모든 페이지에 일관된 패딩 적용 */
+}
+
+/* 카드 스타일 일관성 */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem; /* 카드 간 간격 일관성 유지 */
+  margin-bottom: 2rem;
+}
+
+/* 강조 텍스트와 내용 분리 스타일 */
+.list-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+}
+
+.list-item strong + span::before {
+  content: '';
+  display: block;
+  width: 100%;
+  margin: 0.3rem 0;
+  border-top: 1px dashed #e2e8f0;
+}
+
+/* 반응형 여백 조정 */
+@media (max-width: 768px) {
+  .container-main {
+    padding: 0.75rem;
+  }
+  
+  .card-container {
+    gap: 1rem;
+  }
+} 
