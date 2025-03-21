@@ -72,8 +72,8 @@ export default function DogPersonalityTester() {
   // 트위터 공유
   const shareToTwitter = () => {
     if (!data) return;
-    const text = `제 반려동물의 성격은 ${data.personality.join(', ')} 입니다!`;
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`;
+    const text = `제 반려동물은  ${data.personality.join(', ')} 이런 성격이래요!`;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(`${shareUrl}?utm_source=twitter&utm_medium=social&utm_campaign=dog_personality_test`)}`;
     window.open(twitterUrl, '_blank');
   };
 
