@@ -20,15 +20,13 @@ jobs:
       - name: Install dependencies
         run: npm install
           
-      - name: Build and Export Next.js
-        run: |
-          npm run build
-          npx next export
-
+      - name: Build Next.js
+        run: npm run build
+      
       - name: Build Check
         run: |
           ls -la
-          ls -la out || echo "out directory not found"
+          ls -la .next || echo ".next directory not found"
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
@@ -39,12 +37,15 @@ jobs:
 
       - name: Sync to S3
         run: |
-          # out 디렉토리가 존재하는지 확인
-          if [ -d "./out" ]; then
-            aws s3 sync ./out/ s3://${{ secrets.S3_BUCKET }} --delete
+          if [ -d "./.next/static" ]; then
+            # Static 파일은 _next/static 경로로 업로드
+            aws s3 sync ./.next/static/ s3://${{ secrets.S3_BUCKET }}/_next/static/ --delete
+            
+            # 정적 에셋 (public 폴더의 내용)
+            aws s3 sync ./public/ s3://${{ secrets.S3_BUCKET }}/ --delete
           else
-            echo "Error: out directory not found"
-            ls -la
+            echo "Error: .next/static directory not found"
+            ls -la .next
             exit 1
           fi
 
