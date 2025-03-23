@@ -69,7 +69,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <div className="min-h-screen flex flex-col">
           <NavbarWrapper />
-          <div className="flex-1 pt-16">
+          <div className="flex-1 pt-3">
             <Providers>
               {children}
             </Providers>
