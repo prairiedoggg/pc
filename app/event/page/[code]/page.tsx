@@ -1,4 +1,3 @@
-"use client";
 
 // 정적 내보내기를 위한 가능한 경로 생성
 export function generateStaticParams() {
