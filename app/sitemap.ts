@@ -1,5 +1,8 @@
 import { MetadataRoute } from 'next'
 
+// 정적 내보내기 모드에서 필요한 설정
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   // 현재 날짜를 기준으로 lastModified 설정
   const currentDate = new Date();
