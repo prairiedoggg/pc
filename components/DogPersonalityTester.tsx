@@ -192,6 +192,13 @@ const shareToTwitter = () => {
               </InstagramShareButton>
             </ShareButtonsContainer>
           </ShareContainer>
+          
+          <SurveyContainer>
+            <SurveyText>⭐ 설문 참여하고 스타벅스 기프티콘 받기! ⭐</SurveyText>
+            <SurveyButton href="https://forms.gle/R8mTtpAaVAuMgnhWA" target="_blank" rel="noopener noreferrer">
+              설문 참여하기
+            </SurveyButton>
+          </SurveyContainer>
         </ResultContainer>
       )}
     </CardContainer>
@@ -404,5 +411,40 @@ const InstagramShareButton = styled(ShareButton)`
   color: white;
   &:hover {
     opacity: 0.9;
+  }
+`;
+
+const SurveyContainer = styled.div`
+  margin-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+`;
+
+const SurveyText = styled.p`
+  font-size: 0.95rem;
+  color: #4c51bf;
+  font-weight: 500;
+  text-align: center;
+`;
+
+const SurveyButton = styled.a`
+  background-color: #00704a;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  
+  &:hover {
+    background-color: #005c3e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 `; 
