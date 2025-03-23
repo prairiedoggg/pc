@@ -3,6 +3,7 @@
 export default function SuccessPage() {
   return <div>Success Page</div>;
 }
+
   
 // import { useEffect, useState } from 'react';
 // import { useRouter, useSearchParams } from 'next/navigation';
