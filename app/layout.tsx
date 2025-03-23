@@ -11,9 +11,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: '반려동물 성격 예측 서비스',
+  title: 'pettovv',
   description: '이미지를 업로드하여 반려동물의 성격을 예측하세요.',
-  keywords: ['반려동물', '성격 예측', '이미지 분석', '머신러닝'],
+  keywords: ['반려동물', '성격 예측', '이미지 분석', '머신러닝', 'pettovv', '성격예측', '강아지', '고양이', '유기견'],
   other: {
     'google-adsense-account': process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID || '',
   },

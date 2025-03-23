@@ -59,7 +59,7 @@ export default function Home() {
       <footer className="w-full bg-white py-6 px-4 mt-auto text-center rounded-xl shadow-sm">
         <p className="mb-1 text-gray-700">© pettou. All rights reserved.</p>
         <p className="mb-1 text-gray-700">문의: devspred@gmail.com</p>
-        <p className="text-xs text-gray-500 mt-2">이 웹사이트는 무료 템플릿을 활용한 일회성 이벤트로, 이에 따른 청영매니 수수료를 개인맵니다.</p>
+        <p className="text-xs text-gray-500 mt-2">.</p>
       </footer>
     </div>
   );
