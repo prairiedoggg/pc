@@ -1,5 +1,16 @@
-// "use client";
 "use client";
+
+// 정적 내보내기를 위한 가능한 경로 생성
+export function generateStaticParams() {
+  // 여기서는 더미 코드만 제공합니다.
+  // 실제 프로덕션 환경에서는 API 또는 데이터베이스에서 실제 코드 목록을 가져와야 합니다.
+  return [
+    { code: 'demo1' },
+    { code: 'demo2' },
+    { code: 'demo3' },
+    // 더 많은 코드 추가 가능
+  ];
+}
 
 export default function EventPage() {
   return <div>Event Page</div>;
