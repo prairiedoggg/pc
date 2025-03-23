@@ -52,8 +52,20 @@ export default function DogPersonalityTester() {
     isError
   } = useMutation({
     mutationFn: async (formData: FormData): Promise<PredictionResult> => {
-      const res = await apiClient.post('/api/predict', formData);
-      return res.data;
+      try {
+        // FormData를 사용할 때는 axios가 자동으로 Content-Type을 설정하도록 함
+        // 명시적인 헤더 설정을 제거하여 'multipart/form-data; boundary=...' 형식으로 자동 설정되게 함
+        const res = await apiClient.post('/api/predict', formData, {
+          headers: {
+            // Content-Type을 여기서 설정하지 않음 (axios가 자동 설정)
+            'Accept': 'application/json'
+          }
+        });
+        return res.data;
+      } catch (error) {
+        console.error('API 호출 오류:', error);
+        throw error;
+      }
     },
     onSuccess: () => {
       // 성공 시 캐시 무효화 등의 작업 가능
