@@ -23,7 +23,7 @@ export default function Navbar() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               <span className="text-xl font-bold text-primary hover:text-primary-dark transition-colors">
-                반려견 성격 테스트 🐕
+                PETTOVV
               </span>
             </Link>
           </div>

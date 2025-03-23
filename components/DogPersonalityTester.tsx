@@ -89,6 +89,7 @@ export default function DogPersonalityTester() {
 
   return (
     <CardContainer>
+
       <TestTitle>우리 강아지는 어떤 성격일까?!</TestTitle>
       <Description>이미지를 업로드해 반려동물의 성격을 예측해보세요!</Description>
 
