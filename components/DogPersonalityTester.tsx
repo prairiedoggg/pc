@@ -91,8 +91,8 @@ const shareToTwitter = () => {
   if (!data) return;
   
   // 마지막 항목만 다르게 처리
-  let formattedPersonalities = data.personality.slice(0, -1).map(
-    p => personalityFormatters[p] || p
+  const formattedPersonalities = data.personality.slice(0, -1).map(
+    p => personalityFormatters[p as keyof typeof personalityFormatters] || p
   );
   
   // 마지막 항목은 '~한' 형태 유지
