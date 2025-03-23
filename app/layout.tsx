@@ -65,6 +65,18 @@ export default function RootLayout({
           src="https://pagead.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2568866467581564"
           crossOrigin="anonymous"
         />
+        <Script
+          id="adsense-auto-ads"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (adsbygoogle = window.adsbygoogle || []).push({
+                google_ad_client: "ca-pub-2568866467581564",
+                enable_page_level_ads: true
+              });
+            `
+          }}
+        />
       </head>
       <body className={inter.className}>
         <div className="min-h-screen flex flex-col">
