@@ -52,20 +52,8 @@ export default function DogPersonalityTester() {
     isError
   } = useMutation({
     mutationFn: async (formData: FormData): Promise<PredictionResult> => {
-      try {
-        // FormData를 사용할 때는 axios가 자동으로 Content-Type을 설정하도록 함
-        // 명시적인 헤더 설정을 제거하여 'multipart/form-data; boundary=...' 형식으로 자동 설정되게 함
-        const res = await apiClient.post('/api/predict', formData, {
-          headers: {
-            // Content-Type을 여기서 설정하지 않음 (axios가 자동 설정)
-            'Accept': 'application/json'
-          }
-        });
-        return res.data;
-      } catch (error) {
-        console.error('API 호출 오류:', error);
-        throw error;
-      }
+      const res = await apiClient.post('/api/predict', formData);
+      return res.data;
     },
     onSuccess: () => {
       // 성공 시 캐시 무효화 등의 작업 가능
@@ -81,13 +69,46 @@ export default function DogPersonalityTester() {
     mutate(formData);
   };
 
-  // 트위터 공유
-  const shareToTwitter = () => {
-    if (!data) return;
-    const text = `제 반려동물은  ${data.personality.join(', ')} 이런 성격이래요!`;
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(`${shareUrl}?utm_source=twitter&utm_medium=social&utm_campaign=dog_personality_test`)}`;
-    window.open(twitterUrl, '_blank');
-  };
+// DogPersonalityTester.tsx 수정
+
+// 성격에 따른 적절한 조사 매핑
+const personalityFormatters = {
+  '활발한': '활발하며',
+  '항상 행복해': '항상 행복해하며',
+  '권위 있는': '권위가 있으며',
+  '독립적인': '독립적이며',
+  '호기심 많은': '호기심이 많으며',
+  '아무 생각 없다': '단순하며',
+  '순수한': '순수하며',
+  '게으름쟁이': '게으르며',
+  '충성스러운': '충성스러우며',
+  '소심이': '소심하며',
+  '똑똑이': '똑똑하며'
+};
+
+// 트위터 공유 함수 수정
+const shareToTwitter = () => {
+  if (!data) return;
+  
+  // 마지막 항목만 다르게 처리
+  let formattedPersonalities = data.personality.slice(0, -1).map(
+    p => personalityFormatters[p] || p
+  );
+  
+  // 마지막 항목은 '~한' 형태 유지
+  const lastItem = data.personality[data.personality.length - 1];
+  
+  // 공유 텍스트 생성
+  let text = '';
+  if (formattedPersonalities.length > 0) {
+    text = `제 반려동물은 ${formattedPersonalities.join(' ')} ${lastItem} 성격이래요!`;
+  } else {
+    text = `제 반려동물은 ${lastItem} 성격이래요!`;
+  }
+  
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(`${shareUrl}?utm_source=twitter&utm_medium=social&utm_campaign=dog_personality_test`)}`;
+  window.open(twitterUrl, '_blank');
+};
 
   // 인스타그램 공유 (스토리에 직접 올리는 방식)
   const shareToInstagram = () => {
