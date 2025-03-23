@@ -18,18 +18,15 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        run: |
-          cd app
-          npm install
+        run: npm install
           
       - name: Build and Export Next.js
-        run: |
-          cd app
-          npm run build
+        run: npm run build
       
       - name: Build Check
         run: |
           ls -la
+          ls -la out || echo "out directory not found"
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
@@ -40,9 +37,17 @@ jobs:
 
       - name: Sync to S3
         run: |
-          aws s3 sync ./out/ s3://${{ secrets.S3_BUCKET }} --delete
+          # out 디렉토리가 존재하는지 확인
+          if [ -d "./out" ]; then
+            aws s3 sync ./out/ s3://${{ secrets.S3_BUCKET }} --delete
+          else
+            echo "Error: out directory not found"
+            ls -la
+            exit 1
+          fi
 
       - name: Invalidate CloudFront Cache
+        if: success()
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ secrets.DISTRIBUTION_ID }} \
